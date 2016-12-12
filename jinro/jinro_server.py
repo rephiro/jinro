@@ -36,14 +36,20 @@ class Server(object):
             name = dict_data['name']
             res = flask.make_response()
             if name in [u.name for u in self.users]:
-                res.data = "{name} is already exists.".format(name=name)
-                res.headers['Content-type'] = 'text/plain'
-                return res
+                flask.abort(409)
             new_user = common.User(name)
             self.users.append(new_user)
             res.data = str(new_user)
             res.headers['Content-type'] = 'text/json'
             return res
+
+        @self.app.errorhandler(409)
+        def conflict(error):
+            data = json.dumps({
+                "status": 409,
+                "msg": "resource conflict"
+            })
+            return flask.make_response(data, 409)
 
     def __repr__(self):
         data = {}
