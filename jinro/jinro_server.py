@@ -43,6 +43,13 @@ class Server(object):
             res.headers['Content-type'] = 'text/json'
             return res
 
+        @self.app.route('/user/<string:username>', methods=['GET'])
+        def user_get(username):
+            for u in self.users:
+                if u.name == username:
+                    return flask.make_response(str(u))
+            flask.abort(404)
+
         @self.app.errorhandler(409)
         def conflict(error):
             data = json.dumps({
@@ -50,6 +57,14 @@ class Server(object):
                 "msg": "resource conflict"
             })
             return flask.make_response(data, 409)
+
+        @self.app.errorhandler(404)
+        def not_found(error):
+            data = json.dumps({
+                "status": 404,
+                "msg": "resource is not found"
+            })
+            return flask.make_response(data, 404)
 
     def __repr__(self):
         data = {}

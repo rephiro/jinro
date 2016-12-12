@@ -16,8 +16,10 @@ def main():
     json_data = json.dumps(dict_data)
     req = urllib2.Request(
         '{url}?{params}'.format(url=url, params=params),
-        data=json_data, headers=header)
+        data=json_data,
+        headers=header)
     res = urllib2.urlopen(req)
+
     print(res.read())
 
 
