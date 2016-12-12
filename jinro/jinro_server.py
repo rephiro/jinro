@@ -12,12 +12,11 @@ class Server(object):
         self.app = flask.Flask(__name__)
         self.users = []
 
-        @self.app.route('/', methods=['GET'])
-        def getrequest():
+        @self.app.route('/', methods=['GET', 'POST'])
+        def info():
             res = flask.make_response()
-            res.data = 'Jinro Server\n'
-            res.data += self.users
-            res.headers['Content-type'] = 'text/plain'
+            res.data = str(self)
+            res.headers['Content-type'] = 'text/json'
             return res
 
         @self.app.route('/', methods=['POST'])
@@ -40,11 +39,17 @@ class Server(object):
                 res.data = "{name} is already exists.".format(name=name)
                 res.headers['Content-type'] = 'text/plain'
                 return res
-            self.users.append(common.User(name))
-            res.data = json.dumps(
-                self.users, default=common.support_json_serializable)
+            new_user = common.User(name)
+            self.users.append(new_user)
+            res.data = str(new_user)
             res.headers['Content-type'] = 'text/json'
             return res
+
+    def __repr__(self):
+        data = {}
+        data["server"] = "Jinro Server"
+        data["users"] = self.users
+        return json.dumps(data, default=common.support_json_serializable)
 
 
 def main():
