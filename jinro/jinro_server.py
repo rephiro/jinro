@@ -4,6 +4,7 @@ import flask
 import json
 
 import common
+import game
 
 
 class Server(object):
@@ -11,6 +12,7 @@ class Server(object):
     def __init__(self):
         self.app = flask.Flask(__name__)
         self.users = []
+        self.game = None
 
         @self.app.route('/', methods=['GET', 'POST'])
         def info():
@@ -27,6 +29,28 @@ class Server(object):
             res = flask.make_response()
             res.data = 'name = {name}'.format(name=name)
             res.headers['Content-type'] = 'text/plain'
+            return res
+
+        @self.app.route('/game', methods=['POST'])
+        def create_game():
+            data = flask.request.data
+            dict_data = json.loads(data)
+            name = dict_data['name']
+            self.game = game.JinroGame(users=self.users, admin=name)
+
+            res = flask.make_response()
+            res.data = str(self.game)
+            res.headers['Content-type'] = 'text/json'
+            return res
+
+        @self.app.route('/game', methods=['DELETE'])
+        def end_game():
+            self.game.end()
+            self.game = None
+
+            res = flask.make_response()
+            res.data = str(self.game)
+            res.headers['Content-type'] = 'text/json'
             return res
 
         @self.app.route('/user', methods=['POST'])
@@ -67,10 +91,13 @@ class Server(object):
             return flask.make_response(data, 404)
 
     def __repr__(self):
-        data = {}
-        data["server"] = "Jinro Server"
-        data["users"] = self.users
-        return json.dumps(data, default=common.support_json_serializable)
+        data = {
+            "server": "Jinro Server",
+            "users": self.users,
+            "game": self.game,
+        }
+
+        return json.dumps(data, default=common.json_serializable_function())
 
 
 def main():

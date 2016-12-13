@@ -20,18 +20,16 @@ class User(object):
         })
 
 
-def json_serialize_User(func):
-    def wraps(*args, **kwargs):
-        o = args[0]
+def json_serializable_function():
+    from game import JinroGame
+
+    def support_json_serializable(o):
         if isinstance(o, User):
             return json.loads(str(o))
-        func(*args, **kwargs)
-    return wraps
-
-
-@json_serialize_User
-def support_json_serializable(o):
-    raise TypeError(repr(o) + " is not JSON serializable")
+        if isinstance(o, JinroGame):
+            return json.loads(str(o))
+        raise TypeError(repr(o) + " is not JSON serializable")
+    return support_json_serializable
 
 
 def main():
