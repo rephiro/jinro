@@ -19,6 +19,14 @@ class User(object):
             "id": self.id,
         })
 
+    def __eq__(self, other):
+        if isinstance(other, User):
+            return self == other
+        elif isinstance(other, str):
+            return self.name == other
+        else:
+            return False
+
 
 def json_serializable_function():
     from game import JinroGame
@@ -37,6 +45,8 @@ def main():
     u2 = User('araiguma')
     print(u1)
     print(u2)
+    print(u1 == 'bonobono')
+    print('bonobono' in [u1, u2])
 
 
 if __name__ == "__main__":
