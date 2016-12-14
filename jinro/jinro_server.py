@@ -17,18 +17,8 @@ class Server(object):
         @self.app.route('/', methods=['GET', 'POST'])
         def info():
             res = flask.make_response()
-            res.data = str(self)
+            res.data = json.dumps(json.loads(str(self)), indent=2)
             res.headers['Content-type'] = 'text/json'
-            return res
-
-        @self.app.route('/', methods=['POST'])
-        def postrequest():
-            data = flask.request.data
-            dict_data = json.loads(data)
-            name = dict_data['name']
-            res = flask.make_response()
-            res.data = 'name = {name}'.format(name=name)
-            res.headers['Content-type'] = 'text/plain'
             return res
 
         @self.app.route('/game', methods=['POST'])
