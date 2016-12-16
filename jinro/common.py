@@ -4,23 +4,32 @@ import json
 
 
 class JinroObject(object):
+
     def __repr__(self):
         buf = {}
         for objname in dir(self):
-            if objname.startswith("__") and objname.endswith("__"):
+            if objname in dir(type(self)):
                 continue
             obj = getattr(self, objname)
             if callable(obj):
                 continue
-            if objname in dir(type(self)):
+            if objname == "repr_ng_words":
+                continue
+            if objname.startswith("__") and objname.endswith("__"):
                 continue
             buf[objname] = obj
+        if "repr_ng_words" in dir(self):
+            repr_ng_words = getattr(self, "repr_ng_words")
+            if isinstance(repr_ng_words, list):
+                for ngword in repr_ng_words:
+                    buf.pop(ngword)
         return json.dumps(buf, default=json_serializable_function())
 
 
 class User(JinroObject):
 
     user_serial = 0
+    repr_ng_words = ["password"]
 
     def __init__(self, name, password=None):
         self.name = name
