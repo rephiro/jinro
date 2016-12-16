@@ -21,7 +21,7 @@ class User(object):
 
     def __eq__(self, other):
         if isinstance(other, User):
-            return self == other
+            return id(self) == id(other)
         elif isinstance(other, str):
             return self.name == other
         else:
@@ -45,6 +45,8 @@ def main():
     u2 = User('araiguma')
     print(u1)
     print(u2)
+    print(u1 == u1)
+    print("bonobono" == u1)
     print(u1 == 'bonobono')
     print('bonobono' in [u1, u2])
 
