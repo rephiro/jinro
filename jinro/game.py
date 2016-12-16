@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import json
-
 import common
 
 
-class JinroGame(object):
+class JinroGame(common.JinroObject):
 
     def __init__(self, users=[], admin=None):
         self.users = users
@@ -13,12 +11,6 @@ class JinroGame(object):
 
     def end(self):
         pass
-
-    def __repr__(self):
-        return json.dumps({
-            "users": self.users,
-            "admin": self.admin,
-        }, default=common.json_serializable_function())
 
 
 def main():

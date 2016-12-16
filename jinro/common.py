@@ -3,7 +3,22 @@
 import json
 
 
-class User(object):
+class JinroObject(object):
+    def __repr__(self):
+        buf = {}
+        for objname in dir(self):
+            if objname.startswith("__") and objname.endswith("__"):
+                continue
+            obj = getattr(self, objname)
+            if callable(obj):
+                continue
+            if objname in dir(type(self)):
+                continue
+            buf[objname] = obj
+        return json.dumps(buf, default=json_serializable_function())
+
+
+class User(JinroObject):
 
     user_serial = 0
 
@@ -12,12 +27,6 @@ class User(object):
         User.user_serial += 1
         self.id = User.user_serial
         self.password = password
-
-    def __repr__(self):
-        return json.dumps({
-            "name": self.name,
-            "id": self.id,
-        })
 
     def __eq__(self, other):
         if isinstance(other, User):
@@ -32,9 +41,8 @@ def json_serializable_function():
     from game import JinroGame
 
     def support_json_serializable(o):
-        if isinstance(o, User):
-            return json.loads(str(o))
-        if isinstance(o, JinroGame):
+        if isinstance(o, User) or \
+                isinstance(o, JinroGame):
             return json.loads(str(o))
         raise TypeError(repr(o) + " is not JSON serializable")
     return support_json_serializable
