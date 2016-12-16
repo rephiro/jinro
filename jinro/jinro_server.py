@@ -22,15 +22,19 @@ class Server(object):
             return res
 
         @self.app.route('/game', methods=['POST'])
-        def create_game():
+        def post_game():
             data = flask.request.data
             dict_data = json.loads(data)
             name = dict_data['name']
-            for u in self.users:
-                if u.name == name:
-                    admin = u
+            op = dict_data['operation']
+            args = dict_data['args']
+            for post_user in self.users:
+                if post_user.name == name:
                     break
-            self.game = game.JinroGame(users=self.users, admin=admin)
+            if self.game is None:
+                self.game = game.JinroGame(users=self.users, admin=post_user)
+            else:
+                self.game.post(op, args, user=post_user)
 
             res = flask.make_response()
             res.data = str(self.game)

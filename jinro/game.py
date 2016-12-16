@@ -11,6 +11,10 @@ class JinroGame(common.JinroObject):
             raise Exception("admin user must be in participant")
         self.admin = admin
 
+    def post(self, op, args, user=None):
+        if user is None:
+            raise Exception('user {0} is not found'.format(user))
+
     def end(self):
         pass
 

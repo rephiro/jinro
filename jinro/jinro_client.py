@@ -30,6 +30,13 @@ def arg_parse():
         default="GET",
         help="http method",
         metavar="METHOD")
+    parser.add_argument(
+        "-o", "--operation",
+        dest="operation",
+        type=str,
+        default="create",
+        help="operation to resource",
+        metavar="OP")
     args = parser.parse_args()
     return args
 
@@ -40,6 +47,8 @@ def main():
     header = {"Content-Type": "text/json"}
     dict_data = {
         'name': args.user,
+        'operation': args.operation,
+        'args': {}
     }
     params = urllib.urlencode({'p1': 1, 'p2': 2})
     json_data = json.dumps(dict_data)
