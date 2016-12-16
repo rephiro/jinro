@@ -7,6 +7,8 @@ class JinroGame(common.JinroObject):
 
     def __init__(self, users=[], admin=None):
         self.users = users
+        if admin not in users:
+            raise Exception("admin user must be in participant")
         self.admin = admin
 
     def end(self):
@@ -14,9 +16,18 @@ class JinroGame(common.JinroObject):
 
 
 def main():
-    u1 = common.User('bonobono')
-    u2 = common.User('araiguma')
-    g = JinroGame(users=[u1, u2], admin=u1)
+    admin = common.User('bonobono')
+    g = JinroGame(
+        users=[
+            admin,
+            common.User('araiguma'),
+            common.User('shimarisu'),
+            common.User('kuzuri'),
+            common.User('higumanotaisyo'),
+            common.User('fenegy'),
+            common.User('anaguma'),
+            common.User('shimacchau'),
+        ], admin=admin)
     print(g)
 
 

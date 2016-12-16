@@ -26,7 +26,11 @@ class Server(object):
             data = flask.request.data
             dict_data = json.loads(data)
             name = dict_data['name']
-            self.game = game.JinroGame(users=self.users, admin=name)
+            for u in self.users:
+                if u.name == name:
+                    admin = u
+                    break
+            self.game = game.JinroGame(users=self.users, admin=admin)
 
             res = flask.make_response()
             res.data = str(self.game)
