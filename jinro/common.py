@@ -48,11 +48,19 @@ class User(JinroObject):
 
 def json_serializable_function():
     from game import JinroGame
+    from game import Rule
+    from game import Member
+    json_serializable_class = [
+        User,
+        JinroGame,
+        Rule,
+        Member,
+    ]
 
     def support_json_serializable(o):
-        if isinstance(o, User) or \
-                isinstance(o, JinroGame):
-            return json.loads(str(o))
+        for c in json_serializable_class:
+            if isinstance(o, c):
+                return json.loads(str(o))
         raise TypeError(repr(o) + " is not JSON serializable")
     return support_json_serializable
 

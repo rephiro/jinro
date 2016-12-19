@@ -41,16 +41,6 @@ class Server(object):
             res.headers['Content-type'] = 'text/json'
             return res
 
-        @self.app.route('/game', methods=['DELETE'])
-        def end_game():
-            self.game.end()
-            self.game = None
-
-            res = flask.make_response()
-            res.data = str(self.game)
-            res.headers['Content-type'] = 'text/json'
-            return res
-
         @self.app.route('/user', methods=['POST'])
         def user():
             data = flask.request.data
